@@ -54,15 +54,18 @@ io.sockets.on('connection', socket => {
     }
   })
 
-  socket.on('exit', room => {
-    getClients(room)
-      .then(clients => {
-        if (!clients.includes(socket.id)) {
-          socket.to(room).emit('log', [`Client ${socket.id} left, but was not in the room`])
-          return
-        }
+  socket.on('disconnecting', reason => {
+    const report = reason === 'ping timeout' ? console.warn : console.log
+    report(`Client ${socket.id} is being disconnected due ${reason}`)
 
-        rooms.leave(room, socket, clients.length)
-      })
+    Object.keys(socket.rooms).forEach(room =>
+      getClients(room)
+        .then(clients => clients.length)
+        .then(numClients => rooms.leave(room, socket, numClients))
+    )
+  })
+
+  socket.on('disconnect', reason => {
+    console.log(`Client ${socket.id} disconnected due to ${reason}`)
   })
 })
