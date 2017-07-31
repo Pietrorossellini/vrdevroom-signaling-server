@@ -1,6 +1,7 @@
 export default class Client {
-  constructor(id, isLeader = false) {
+  constructor(id, name = 'Unknown', isLeader = false) {
     this.id = id
+    this.name = name
     this.isLeader = isLeader
   }
 }

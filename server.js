@@ -38,8 +38,8 @@ io.sockets.on('connection', socket => {
     }
   })
 
-  socket.on('enter', room => {
-    log(socket, 'Received request to enter room ' + room)
+  socket.on('enter', (room, nickname) => {
+    log(socket, `Received request from ${nickname} to enter room ${room}`)
 
     getClients(room)
       .then(clients => clients.length)
@@ -48,8 +48,8 @@ io.sockets.on('connection', socket => {
     function maybeJoin(numClients) {
       log(socket, 'Room ' + room + ' had ' + numClients + ' client(s)')
 
-      if (numClients === 0) rooms.createAndJoin(room, socket, MAX_CLIENTS)
-      else if (numClients < MAX_CLIENTS) rooms.join(room, socket)
+      if (numClients === 0) rooms.createAndJoin(room, nickname, socket, MAX_CLIENTS)
+      else if (numClients < MAX_CLIENTS) rooms.join(room, nickname, socket)
       else socket.emit('full', room)
     }
   })

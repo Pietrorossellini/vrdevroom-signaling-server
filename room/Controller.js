@@ -8,28 +8,28 @@ class RoomController {
     this.rooms = Map()
   }
 
-  createAndJoin(roomName, socket, size = 3) {
+  createAndJoin(roomName, nickname, socket, size = 3) {
     socket.join(roomName)
 
     const room = new Room(roomName, size)
-    room.fillNextAvailableSlot(new Client(socket.id, true))
+    room.fillNextAvailableSlot(new Client(socket.id, nickname, true))
     this.rooms = this.rooms.set(roomName, room)
 
     socket.emit('created', roomName, socket.id)
-    this.log(socket.to(roomName), `Client ID ${socket.id} created room ${roomName}`)
+    this.log(socket.to(roomName), `${nickname} with client ID ${socket.id} created room ${roomName}`)
   }
 
-  join(roomName, socket) {
+  join(roomName, nickname, socket) {
     const room = this.rooms.get(roomName)
     if (!room.hasAvailableSlot()) throw new Error('Room full')
 
     socket.to(roomName).emit('join', roomName)
 
     socket.join(roomName)
-    const slot = room.fillNextAvailableSlot(new Client(socket.id))
+    const slot = room.fillNextAvailableSlot(new Client(socket.id, nickname))
 
     socket.emit('joined', roomName, socket.id, slot)
-    this.log(socket.to(roomName), `Client ID ${socket.id} joined room ${roomName}`)
+    this.log(socket.to(roomName), `${nickname} with client ID ${socket.id} joined room ${roomName}`)
   }
 
   leave(roomName, socket, numClients) {
