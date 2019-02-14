@@ -4,8 +4,6 @@
 
 This is a simple WebSockets-based signaling server that accompanies the [VR deVRoom](https://github.com/Pietrorossellini/vrdevroom), a networked WebVR prototype application for supporting remote collaboration within agile software development.
 
-> Try VR deVRoom out at [vrdevroom.com](https://www.vrdevroom.com)
-
 ## Getting started
 
 Interested in forking the signaling server? Get up-and-running with these steps:
